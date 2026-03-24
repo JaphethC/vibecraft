@@ -1,65 +1,213 @@
-import Image from "next/image";
+import Link from "next/link";
+import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen flex flex-col bg-surface">
+      {/* Navigation */}
+      <header className="border-b border-outline-variant/10 bg-surface-container-lowest">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
+              <span className="material-symbols-outlined text-on-primary">auto_awesome</span>
+            </div>
+            <div>
+              <h1 className="text-xl font-headline font-bold text-primary">VibeCraft</h1>
+              <p className="text-xs text-on-surface-variant">Your Tactile Companion</p>
+            </div>
+          </div>
+          <nav className="flex items-center gap-4">
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="btn-secondary">
+                  Sign In
+                </button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <Link href="/dashboard">
+                <button className="btn-primary">
+                  Go to Dashboard
+                </button>
+              </Link>
+            </SignedIn>
+          </nav>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+      </header>
+
+      {/* Hero Section */}
+      <main className="flex-1">
+        <section className="max-w-7xl mx-auto px-6 py-24">
+          <div className="max-w-3xl">
+            <h2 className="display-lg text-on-surface mb-6">
+              Build software by describing your work
+            </h2>
+            <p className="body-lg text-on-surface-variant mb-10">
+              VibeCraft bridges the gap between people who deeply understand industry workflows
+              and the ability to create software to optimize them. No coding. No drag-and-drop.
+              Just conversation.
+            </p>
+            <div className="flex gap-4">
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <button className="btn-primary">
+                    Start Building Free
+                  </button>
+                </SignInButton>
+              </SignedOut>
+              <SignedIn>
+                <Link href="/dashboard">
+                  <button className="btn-primary">
+                    Open Dashboard
+                  </button>
+                </Link>
+              </SignedIn>
+              <a
+                href="#how-it-works"
+                className="btn-secondary"
+              >
+                Learn More
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* How It Works */}
+        <section id="how-it-works" className="bg-surface-container py-24">
+          <div className="max-w-7xl mx-auto px-6">
+            <h3 className="headline-lg text-on-surface mb-12 text-center">
+              How VibeCraft Works
+            </h3>
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Step 1 */}
+              <div className="card">
+                <div className="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center mb-4">
+                  <span className="material-symbols-outlined text-on-primary-container text-xl">chat</span>
+                </div>
+                <h4 className="headline-md text-on-surface mb-2">1. Describe Your Problem</h4>
+                <p className="body-md text-on-surface-variant">
+                  Tell us about a repetitive task or workflow that&apos;s slowing you down. Use your own words,
+                  no technical jargon needed.
+                </p>
+              </div>
+
+              {/* Step 2 */}
+              <div className="card">
+                <div className="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center mb-4">
+                  <span className="material-symbols-outlined text-on-primary-container text-xl">auto_awesome</span>
+                </div>
+                <h4 className="headline-md text-on-surface mb-2">2. Watch It Take Shape</h4>
+                <p className="body-md text-on-surface-variant">
+                  See a functional tool appear on screen as you talk. The interface evolves in real-time
+                  based on your needs.
+                </p>
+              </div>
+
+              {/* Step 3 */}
+              <div className="card">
+                <div className="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center mb-4">
+                  <span className="material-symbols-outlined text-on-primary-container text-xl">rocket_launch</span>
+                </div>
+                <h4 className="headline-md text-on-surface mb-2">3. Use Your Tool</h4>
+                <p className="body-md text-on-surface-variant">
+                  Start using your custom workflow tool immediately. Refine it through conversation
+                  until it fits your work perfectly.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Example Use Cases */}
+        <section className="max-w-7xl mx-auto px-6 py-24">
+          <h3 className="headline-lg text-on-surface mb-12 text-center">
+            Built for Real Work
+          </h3>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="card-lg">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center">
+                  <span className="material-symbols-outlined text-on-tertiary-container">factory</span>
+                </div>
+                <h4 className="headline-md text-on-surface">Sheet Metal Shop</h4>
+              </div>
+              <p className="body-md text-on-surface-variant mb-4">
+                &ldquo;I need a way to calculate quotes based on material type, thickness, and quantity.&rdquo;
+              </p>
+              <span className="label-sm text-primary">Quote Calculator →</span>
+            </div>
+
+            <div className="card-lg">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center">
+                  <span className="material-symbols-outlined text-on-tertiary-container">bakery_dining</span>
+                </div>
+                <h4 className="headline-md text-on-surface">Bakery Orders</h4>
+              </div>
+              <p className="body-md text-on-surface-variant mb-4">
+                &ldquo;I want to track custom cake orders with pickup dates and customer contact info.&rdquo;
+              </p>
+              <span className="label-sm text-primary">Order Tracker →</span>
+            </div>
+
+            <div className="card-lg">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center">
+                  <span className="material-symbols-outlined text-on-tertiary-container">construction</span>
+                </div>
+                <h4 className="headline-md text-on-surface">Construction Crew</h4>
+              </div>
+              <p className="body-md text-on-surface-variant mb-4">
+                &ldquo;I need a daily check-in form for my crew to report their location and tasks.&rdquo;
+              </p>
+              <span className="label-sm text-primary">Crew Check-in →</span>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="bg-primary-container py-24">
+          <div className="max-w-4xl mx-auto px-6 text-center">
+            <h3 className="headline-lg text-on-primary-container mb-4">
+              Ready to build your first tool?
+            </h3>
+            <p className="body-lg text-on-primary-container mb-8">
+              Join industry experts who are creating software without learning to code.
+            </p>
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-surface-container transition-colors">
+                  Start Building Free
+                </button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <Link href="/dashboard">
+                <button className="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-surface-container transition-colors">
+                  Open Dashboard
+                </button>
+              </Link>
+            </SignedIn>
+          </div>
+        </section>
       </main>
+
+      {/* Footer */}
+      <footer className="bg-surface-container-low border-t border-outline-variant/10">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+                <span className="material-symbols-outlined text-on-primary text-sm">auto_awesome</span>
+              </div>
+              <span className="font-headline font-bold text-primary">VibeCraft</span>
+            </div>
+            <p className="body-sm text-on-surface-variant">
+              © 2026 VibeCraft. Built for industry experts.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
