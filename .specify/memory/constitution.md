@@ -35,11 +35,12 @@ problems, not by learning developer vocabulary.
 ### II. Split-Screen, Instant-Feedback UX
 The core product experience MUST prioritize a split-screen layout where conversation and guidance live on the
 left and visual results, previews, or generated workflow artifacts appear on the right. User actions that change
-the generated experience MUST stream visible progress and update the right-side output as quickly as meaningful
-partial results are available. New flows, experiments, and MVP reductions MUST preserve this left-to-right
-conversation-to-result loop unless a documented exception proves that another layout better supports the same
-immediacy. This principle exists because trust in an AI builder comes from seeing ideas become tangible while the
-conversation is still happening.
+the generated experience MUST show visible progress immediately and update the right-side output as quickly as a
+validated result is available. For the 2-day hackathon MVP, visible progress MAY be delivered through loading
+states such as a spinner, pulse, or plain-language “Thinking...” message instead of streamed text or partial UI
+updates. New flows, experiments, and MVP reductions MUST preserve this left-to-right conversation-to-result loop
+unless a documented exception proves that another layout better supports the same immediacy. This principle exists
+because trust in an AI builder comes from seeing ideas become tangible while the conversation is still happening.
 
 ### III. Modern Next.js Delivery Standards
 Production code MUST use modern Next.js App Router conventions, strict TypeScript types, Tailwind CSS for
@@ -55,10 +56,12 @@ primary integration boundary. The client MUST NEVER call model providers directl
 MUST instruct the model to return only valid, parseable JSON objects that conform to a versioned application state
 schema, forbid extra prose, and constrain outputs to supported component types and required fields. Free-form text
 responses MAY be shown to users, but UI-affecting state MUST originate from validated structured payloads with
-explicit typing, parsing, and failure handling. Streaming implementations MUST surface partial progress without
-blocking the UI, and every AI action that changes visible artifacts MUST define a deterministic mapping from model
-output into interface updates. This rule exists because VibeCraft depends on real-time confidence: users must see
-a live collaborative builder, not a black-box text dump or a broken canvas.
+explicit typing, parsing, and failure handling. For the 2-day hackathon MVP, the OpenRouter request MAY use a
+standard blocking response instead of streaming so the app only parses complete JSON payloads; in that case, the
+UI MUST show a visible loading state while waiting for the validated result. Every AI action that changes visible
+artifacts MUST define a deterministic mapping from model output into interface updates. This rule exists because
+VibeCraft depends on real-time confidence: users must see a live collaborative builder, not a black-box text dump
+or a broken canvas.
 
 ### V. Human-Workflow Fidelity
 Features, requirements, and implementation choices MUST begin from the target worker's daily job story,
@@ -93,8 +96,9 @@ it captures and reflects how people already think about their jobs.
    prompt hardening, and validation of user-facing language whenever a feature touches the conversational
    experience.
 4. Before merge or demo, contributors MUST run the project's relevant verification steps for linting,
-   type-checking, and tests once those commands exist in the repository, and fix failures that violate this
-   constitution.
+   type-checking, and any automated tests that have actually been added to the repository, and fix failures that
+   violate this constitution. For a hackathon MVP, a lint pass and `tsc --noEmit` type-check are the minimum
+   acceptable verification gate when broader automated coverage has not yet been implemented.
 5. Any exception to these gates MUST be documented in the plan with the violated principle, rationale, approved
    scope of the exception, and the follow-up action needed to return to compliance.
 

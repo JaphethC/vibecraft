@@ -19,7 +19,9 @@ The specification must detail:
     Convex Database Schema: Define the tables needed for the MVP, specifically:
         users (Clerk ID, email)
         projects (userId, projectName, chatHistory, and appSchema which holds the generated UI JSON).
-    The AI UI Schema: Define the exact JSON structure the OpenRouter AI will be instructed to output to build the UI. Because of our target audience, this schema must support simple, highly accessible, and clear components (e.g., supporting basic types like text, input, button, card, dropdown with clear, jargon-free labels)."
+    The AI UI Schema: Define the exact JSON structure the OpenRouter AI will be instructed to output to build the UI. Because of our target audience, this schema must support simple, highly accessible, and clear components (e.g., supporting basic types like text, input, button, card, dropdown with clear, jargon-free labels).
+
+Implementation note for the 2-day hackathon MVP: `/api/chat` will use a standard blocking request to OpenRouter and wait for a complete JSON payload before updating Live Canvas. The UI will show a visible loading state instead of streaming partial text or partial JSON.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -95,7 +97,7 @@ plain-language follow-up question while keeping the current project and the last
   the workflow?
 - How does the conversation recover when a user asks for a change that conflicts with an earlier request?
 - What happens when a signed-in user opens a saved project that has conversation history but no visible draft yet?
-- How does the product respond when a user loses connection while a new draft is being prepared?
+- How does the product respond when OpenRouter is unavailable or the user loses connection while a new draft is being prepared?
 
 ## Requirements *(mandatory)*
 
@@ -105,8 +107,8 @@ plain-language follow-up question while keeping the current project and the last
 - **FR-002**: System MUST keep all user-facing responses, labels, and guidance free of developer jargon.
 - **FR-003**: System MUST present Coffee Chat on the left and Live Canvas on the right for the main desktop
   experience.
-- **FR-004**: System MUST show visible progress after a user sends a new message.
-- **FR-005**: System MUST turn structured assistant output into a functional-looking visible tool in Live Canvas.
+- **FR-004**: System MUST show visible progress after a user sends a new message, using a loading state such as a spinner, pulse, or plain-language "Thinking..." message while waiting for a complete response.
+- **FR-005**: System MUST turn structured assistant output into a functional-looking visible tool in Live Canvas from a complete, validated JSON payload returned by a standard blocking request.
 - **FR-006**: System MUST allow the same project to keep evolving through ongoing conversation.
 - **FR-007**: System MUST save each project's name, conversation history, and latest visible tool structure so it
   can be reopened later.
@@ -147,8 +149,7 @@ plain-language follow-up question while keeping the current project and the last
   an initial draft tool within 3 minutes.
 - **SC-002**: In usability checks, at least 85% of participants can correctly explain what Coffee Chat controls
   and what Live Canvas is showing after one brief introduction.
-- **SC-003**: During demos, the product shows a visible loading or partial-progress state within 2 seconds of a
-  user sending a message.
+- **SC-003**: During demos, the product shows a visible loading state within 2 seconds of a user sending a message while waiting for the blocking OpenRouter response.
 - **SC-004**: At least 80% of follow-up requests update the existing project draft instead of forcing the user to
   restart from scratch.
 - **SC-005**: When a request is incomplete, 100% of recovery flows present a plain-language follow-up question or
