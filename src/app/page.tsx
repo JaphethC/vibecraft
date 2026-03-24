@@ -34,12 +34,11 @@ export default function Home() {
               and the ability to create software to optimize them. No coding. No drag-and-drop.
               Just conversation.
             </p>
-            <div className="flex gap-4">
+            <div className="flex items-center gap-4">
               <AuthButtons variant="cta" />
               <a
                 href="#how-it-works"
-                className="btn-secondary"
-                style={{ height: '4rem', fontSize: '1rem', padding: '0 2rem' }}
+                className="inline-flex items-center justify-center bg-[#e8f0fe] text-[#376289] hover:bg-[#d0e0fa] font-medium text-lg px-8 py-4 rounded-xl transition-colors"
               >
                 Learn More
               </a>
