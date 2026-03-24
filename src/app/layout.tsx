@@ -30,9 +30,15 @@ export default function RootLayout({
     <ClerkProvider>
       <html
         lang="en"
-        className={`${plusJakartaSans.variable} ${inter.variable} h-full antialiased`}
+        className={`${plusJakartaSans.variable} ${inter.variable} h-full`}
         suppressHydrationWarning
       >
+        <head>
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+          />
+        </head>
         <body className="min-h-full flex flex-col bg-surface text-on-surface font-body">
           {children}
         </body>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { AuthButtons } from "@/components/auth/auth-buttons";
 
 export default function Home() {
   return (
@@ -17,20 +17,7 @@ export default function Home() {
             </div>
           </div>
           <nav className="flex items-center gap-4">
-            <SignedOut>
-              <SignInButton mode="modal">
-                <button className="btn-secondary">
-                  Sign In
-                </button>
-              </SignInButton>
-            </SignedOut>
-            <SignedIn>
-              <Link href="/dashboard">
-                <button className="btn-primary">
-                  Go to Dashboard
-                </button>
-              </Link>
-            </SignedIn>
+            <AuthButtons variant="header" />
           </nav>
         </div>
       </header>
@@ -48,23 +35,11 @@ export default function Home() {
               Just conversation.
             </p>
             <div className="flex gap-4">
-              <SignedOut>
-                <SignInButton mode="modal">
-                  <button className="btn-primary">
-                    Start Building Free
-                  </button>
-                </SignInButton>
-              </SignedOut>
-              <SignedIn>
-                <Link href="/dashboard">
-                  <button className="btn-primary">
-                    Open Dashboard
-                  </button>
-                </Link>
-              </SignedIn>
+              <AuthButtons variant="cta" />
               <a
                 href="#how-it-works"
                 className="btn-secondary"
+                style={{ height: '4rem', fontSize: '1rem', padding: '0 2rem' }}
               >
                 Learn More
               </a>
@@ -174,20 +149,7 @@ export default function Home() {
             <p className="body-lg text-on-primary-container mb-8">
               Join industry experts who are creating software without learning to code.
             </p>
-            <SignedOut>
-              <SignInButton mode="modal">
-                <button className="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-surface-container transition-colors">
-                  Start Building Free
-                </button>
-              </SignInButton>
-            </SignedOut>
-            <SignedIn>
-              <Link href="/dashboard">
-                <button className="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-surface-container transition-colors">
-                  Open Dashboard
-                </button>
-              </Link>
-            </SignedIn>
+            <AuthButtons variant="cta" />
           </div>
         </section>
       </main>
