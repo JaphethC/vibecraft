@@ -4,7 +4,11 @@
       "Bash(/home/japhethcampbell/vibe/vibe-the-gap/.specify/scripts/bash/create-new-feature.sh *)",
       "Bash(/home/japhethcampbell/vibe/vibe-the-gap/.specify/scripts/bash/setup-plan.sh *)",
       "Bash(/home/japhethcampbell/vibe/vibe-the-gap/.specify/scripts/bash/update-agent-context.sh *)",
-      "Bash(/home/japhethcampbell/vibe/vibecraft/.specify/scripts/bash/check-prerequisites.sh *)"
+      "Bash(/home/japhethcampbell/vibe/vibecraft/.specify/scripts/bash/check-prerequisites.sh *)",
+      "Bash(npm install)",
+      "Bash(npm run *)",
+      "Bash(mkdir *)",
+      "Bash(npx *)"
     ]
   },
   "$version": 3
