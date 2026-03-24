@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { LOADING_STATES, EMPTY_STATES, PLACEHOLDERS } from "@/lib/copy/plain-language";
 
 interface ChatMessage {
   id: string;
@@ -39,7 +40,7 @@ export function ChatPanel({
     {
       id: "welcome",
       role: "assistant" as const,
-      content: "Hi! What repetitive task is slowing you down today?",
+      content: EMPTY_STATES.chatWelcome.message,
       timestamp: Date.now(),
     },
   ];
@@ -49,7 +50,7 @@ export function ChatPanel({
       {/* Chat Header */}
       <header className="p-6 bg-surface-container-low flex justify-between items-center border-b border-outline-variant/5">
         <h1 className="text-xl font-headline font-bold text-on-surface">
-          Tell me about your workflow
+          {EMPTY_STATES.chatWelcome.title}
         </h1>
         <button className="p-2 text-primary hover:bg-surface-container transition-colors rounded-full active:scale-90">
           <span className="material-symbols-outlined">add</span>
@@ -111,7 +112,7 @@ export function ChatPanel({
             <span className="material-symbols-outlined animate-pulse">
               auto_awesome
             </span>
-            <span>Building your tool...</span>
+            <span>{LOADING_STATES.building}</span>
           </div>
         )}
       </div>
@@ -125,7 +126,7 @@ export function ChatPanel({
               onChange={(e) => setInputValue(e.target.value)}
               disabled={isLoading}
               className="w-full h-14 px-6 bg-transparent border-none focus:ring-0 text-on-surface disabled:opacity-50"
-              placeholder="Explain your needs..."
+              placeholder={PLACEHOLDERS.chatInput[0]}
               type="text"
             />
           </div>

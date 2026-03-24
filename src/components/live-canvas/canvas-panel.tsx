@@ -1,5 +1,7 @@
 "use client";
 
+import { EMPTY_STATES } from "@/lib/copy/plain-language";
+
 interface CanvasPanelProps {
   isEmpty?: boolean;
   isLoading?: boolean;
@@ -48,11 +50,10 @@ export function CanvasPanel({
               </span>
             </div>
             <h2 className="headline-lg text-on-surface mb-3">
-              Your tool will appear here
+              {EMPTY_STATES.canvas.title}
             </h2>
             <p className="body-lg text-on-surface-variant max-w-md">
-              Describe your workflow in the chat on the left, and watch as a
-              functional tool takes shape on this canvas.
+              {EMPTY_STATES.canvas.description}
             </p>
           </div>
         ) : (
