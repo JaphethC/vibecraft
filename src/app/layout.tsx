@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import { ConvexClientProvider } from "@/components/providers/convex-provider";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -28,21 +29,23 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html
-        lang="en"
-        className={`${plusJakartaSans.variable} ${inter.variable} h-full`}
-        suppressHydrationWarning
-      >
-        <head>
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-          />
-        </head>
-        <body className="min-h-full flex flex-col bg-surface text-on-surface font-body">
-          {children}
-        </body>
-      </html>
+      <ConvexClientProvider>
+        <html
+          lang="en"
+          className={`${plusJakartaSans.variable} ${inter.variable} h-full`}
+          suppressHydrationWarning
+        >
+          <head>
+            <link
+              rel="stylesheet"
+              href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+            />
+          </head>
+          <body className="min-h-full flex flex-col bg-surface text-on-surface font-body">
+            {children}
+          </body>
+        </html>
+      </ConvexClientProvider>
     </ClerkProvider>
   );
 }
