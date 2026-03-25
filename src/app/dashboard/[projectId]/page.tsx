@@ -22,7 +22,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
   return (
     <div className="h-screen flex flex-col bg-surface">
       {/* Sidebar Navigation - Fixed Position */}
-      <AppSidebar />
+      <AppSidebar userId={userEmail} />
 
       {/* Main Content Area - Offset by sidebar width */}
       <div className="flex-1 flex flex-col ml-20 lg:ml-64 overflow-hidden">

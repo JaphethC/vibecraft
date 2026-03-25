@@ -30,6 +30,20 @@ export function DashboardContent({ userEmail, projectId: initialProjectId }: Das
 
   const isExistingProject = Boolean(initialProjectId);
 
+  // Reset state when switching between project routes and /dashboard
+  useEffect(() => {
+    const nextProjectId = initialProjectId as Id<"projects"> | undefined;
+
+    setProjectId(nextProjectId);
+    setIsInitialized(false);
+
+    if (!nextProjectId) {
+      setMessages([]);
+      setSchema(null);
+      setIsLoading(false);
+    }
+  }, [initialProjectId]);
+
   // Load existing project data from Convex
   const projectData = useQuery(
     api.projects.getProjectWithMessages,
