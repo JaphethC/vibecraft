@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { useQuery } from "convex/react";
+import { useUser } from "@clerk/nextjs";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 
 interface ProjectHistoryProps {
-  userId: string;
   currentProjectId?: Id<"projects">;
 }
 
@@ -14,9 +14,25 @@ interface ProjectHistoryProps {
  * Project History - Shows list of user's past projects in sidebar
  * Allows clicking to reopen a previous conversation
  */
-export function ProjectHistory({ userId, currentProjectId }: ProjectHistoryProps) {
-  const projects = useQuery(api.projects.getUserProjects, userId ? { userId } : "skip");
+export function ProjectHistory({ currentProjectId }: ProjectHistoryProps) {
+  const { user, isLoaded } = useUser();
 
+  // Get projects for the current user
+  const projects = useQuery(
+    api.projects.getUserProjects,
+    isLoaded && user ? { userId: user.id } : "skip"
+  );
+
+  // Show loading state while Clerk is loading
+  if (!isLoaded) {
+    return (
+      <div className="px-4 py-3 text-sm text-on-surface-variant animate-pulse">
+        Loading...
+      </div>
+    );
+  }
+
+  // Show empty state if no projects
   if (!projects || projects.length === 0) {
     return (
       <div className="px-4 py-3 text-sm text-on-surface-variant">

@@ -77,7 +77,7 @@
 ### Implementation for User Story 2
 
 - [X] T025 [P] [US2] Build project history and selection UI in `src/components/layout/project-history.tsx` and `src/components/layout/new-project-button.tsx`
-- [ ] T026 [P] [US2] Add dashboard loaders for reopening a project with its saved chat and stable canvas in `src/app/dashboard/page.tsx` and `src/lib/dashboard/load-project.ts`
+- [X] T026 [P] [US2] Add dashboard loaders for reopening a project with its saved chat and stable canvas in `src/app/dashboard/page.tsx` and `src/lib/dashboard/load-project.ts`
 - [ ] T027 [US2] Extend `/api/chat` to support existing project refinement requests and updated project naming in `src/app/api/chat/route.ts`
 - [ ] T028 [US2] Persist ordered follow-up messages, project status, and updated stable schema in `convex/projects.ts` and `convex/chatMessages.ts`
 - [ ] T029 [US2] Keep the dynamic renderer stable while applying schema refinements in `src/components/live-canvas/dynamic-renderer.tsx`

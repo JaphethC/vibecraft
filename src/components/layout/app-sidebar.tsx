@@ -7,15 +7,15 @@ import { ProjectHistory } from "./project-history";
 import type { Id } from "../../../convex/_generated/dataModel";
 
 interface AppSidebarProps {
-  userId: string;
+  projectId?: string;
 }
 
-export function AppSidebar({ userId }: AppSidebarProps) {
+export function AppSidebar({ projectId }: AppSidebarProps) {
   const pathname = usePathname();
   const { showInfo } = useToast();
 
-  // Extract projectId from URL if on a project page
-  const currentProjectId = pathname.match(/\/dashboard\/([a-zA-Z0-9]+)/)?.[1] as Id<"projects"> | undefined;
+  // Use projectId from props if provided, otherwise extract from URL
+  const currentProjectId = (projectId || pathname.match(/\/dashboard\/([a-zA-Z0-9]+)/)?.[1]) as Id<"projects"> | undefined;
 
   const handleComingSoon = () => {
     showInfo("Coming Soon: This feature is planned for the post-hackathon roadmap!");
@@ -52,7 +52,7 @@ export function AppSidebar({ userId }: AppSidebarProps) {
       </div>
 
       {/* Project History */}
-      <ProjectHistory userId={userId} currentProjectId={currentProjectId} />
+      <ProjectHistory currentProjectId={currentProjectId} />
 
       {/* Bottom Nav - Coming Soon Features */}
       <nav className="mt-auto px-2 pb-4 space-y-1">

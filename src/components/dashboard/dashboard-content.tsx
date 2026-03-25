@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useMutation, useQuery } from "convex/react";
+import { useUser } from "@clerk/nextjs";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { ChatPanel } from "@/components/coffee-chat/chat-panel";
@@ -10,11 +11,11 @@ import type { ChatMessage } from "@/components/coffee-chat/message-list";
 import type { UIBlock } from "@/lib/schemas/ui-schema";
 
 interface DashboardContentProps {
-  userEmail: string;
   projectId?: string;
 }
 
-export function DashboardContent({ userEmail, projectId: initialProjectId }: DashboardContentProps) {
+export function DashboardContent({ projectId: initialProjectId }: DashboardContentProps) {
+  const { user, isLoaded } = useUser();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [schema, setSchema] = useState<UIBlock[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -74,11 +75,16 @@ export function DashboardContent({ userEmail, projectId: initialProjectId }: Das
   }, [isExistingProject, projectData, isInitialized]);
 
   const handleSendMessage = async (content: string, formData?: { values: Record<string, string>; buttonLabel: string }) => {
+    // Don't send if user is not loaded yet
+    if (!isLoaded || !user) {
+      return;
+    }
+
     // Add user message to chat immediately
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,
       role: "user",
-      content: formData 
+      content: formData
         ? `I clicked "${formData.buttonLabel}" with: ${Object.entries(formData.values).map(([k, v]) => `${k}: ${v}`).join(", ")}`
         : content,
       timestamp: Date.now(),
@@ -91,16 +97,16 @@ export function DashboardContent({ userEmail, projectId: initialProjectId }: Das
       // Create project if this is the first message
       let currentProjectId = projectId;
       if (!currentProjectId) {
-        // For MVP, using userEmail as userId placeholder
+        // Use actual Clerk user ID
         const newProject = await createProject({
-          userId: userEmail,
+          userId: user.id,
           projectName: content.slice(0, 50) + (content.length > 50 ? "..." : ""),
         });
-        
+
         if (newProject) {
           currentProjectId = newProject._id;
           setProjectId(currentProjectId);
-          
+
           // Update URL without reload
           window.history.pushState({}, "", `/dashboard/${currentProjectId}`);
         }

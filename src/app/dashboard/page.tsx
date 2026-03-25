@@ -11,12 +11,10 @@ export default async function DashboardPage() {
     redirect("/");
   }
 
-  const userEmail = user.emailAddresses[0]?.emailAddress || "User";
-
   return (
     <div className="h-screen flex flex-col bg-surface">
       {/* Sidebar Navigation - Fixed Position */}
-      <AppSidebar userId={userEmail} />
+      <AppSidebar />
 
       {/* Main Content Area - Offset by sidebar width */}
       <div className="flex-1 flex flex-col ml-20 lg:ml-64 overflow-hidden">
@@ -25,8 +23,8 @@ export default async function DashboardPage() {
           <AuthButtons variant="header" />
         </header>
 
-        {/* Main Content - Chat and Canvas */}
-        <DashboardContent userEmail={userEmail} />
+        {/* Main Content - Chat and Canvas (key forces re-mount on navigation) */}
+        <DashboardContent key="new-chat" />
       </div>
     </div>
   );
