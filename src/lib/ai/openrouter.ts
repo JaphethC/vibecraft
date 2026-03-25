@@ -21,7 +21,7 @@ export async function callOpenRouter(params: {
       "X-Title": "VibeCraft",
     },
     body: JSON.stringify({
-      model: "anthropic/claude-3-haiku", // Fast, cost-effective for MVP
+      model: "anthropic/claude-3.5-sonnet", // Highly capable model for reliable JSON
       messages,
       temperature: 0.7,
       max_tokens: 2000,

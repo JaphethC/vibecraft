@@ -2,8 +2,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { AuthButtons } from "@/components/auth/auth-buttons";
-import { ChatPanel } from "@/components/coffee-chat/chat-panel";
-import { CanvasPanel } from "@/components/live-canvas/canvas-panel";
+import { DashboardContent } from "@/components/dashboard/dashboard-content";
 
 export default async function DashboardPage() {
   const user = await currentUser();
@@ -11,6 +10,8 @@ export default async function DashboardPage() {
   if (!user) {
     redirect("/");
   }
+
+  const userEmail = user.emailAddresses[0]?.emailAddress || "User";
 
   return (
     <div className="h-screen flex flex-col bg-surface">
@@ -24,14 +25,8 @@ export default async function DashboardPage() {
           <AuthButtons variant="header" />
         </header>
 
-        {/* Main Content - Split Screen Layout (35% / 65%) */}
-        <main className="flex-1 flex overflow-hidden">
-          {/* Left Panel - Coffee Chat */}
-          <ChatPanel />
-
-          {/* Right Panel - Live Canvas */}
-          <CanvasPanel />
-        </main>
+        {/* Main Content - Chat and Canvas */}
+        <DashboardContent userEmail={userEmail} />
       </div>
     </div>
   );
