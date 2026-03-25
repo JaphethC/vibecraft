@@ -101,16 +101,23 @@ export function DashboardContent({ userEmail, projectId: initialProjectId }: Das
         });
       }
 
-      // Call the API - include form data if submitted
+      // Call the API - include full conversation history for context
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: formData 
+          message: formData
             ? `The user submitted the form with these values: ${JSON.stringify(formData.values)}. Please process this and update the UI with the result.`
             : content,
+          // Send full conversation history (excluding the welcome message)
+          messages: messages
+            .filter((msg) => msg.id !== "welcome")
+            .map((msg) => ({
+              role: msg.role,
+              content: msg.content,
+            })),
           projectId: currentProjectId,
           formSubmission: formData ? { values: formData.values } : undefined,
         }),

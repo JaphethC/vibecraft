@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ConvexClientProvider } from "@/components/providers/convex-provider";
+import { ToastProvider } from "@/components/ui/toast";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -42,7 +43,9 @@ export default function RootLayout({
             />
           </head>
           <body className="min-h-full flex flex-col bg-surface text-on-surface font-body">
-            {children}
+            <ToastProvider>
+              {children}
+            </ToastProvider>
           </body>
         </html>
       </ConvexClientProvider>

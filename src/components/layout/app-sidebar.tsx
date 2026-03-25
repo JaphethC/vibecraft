@@ -2,35 +2,47 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AuthButtons } from "@/components/auth/auth-buttons";
+import { useToast } from "@/components/ui/toast";
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { showInfo } = useToast();
+
+  const handleComingSoon = () => {
+    showInfo("Coming Soon: This feature is planned for the post-hackathon roadmap!");
+  };
 
   const navItems = [
     {
       label: "New Chat",
       href: "/dashboard",
       icon: "add_comment",
-      active: pathname === "/dashboard",
+      active: pathname === "/dashboard" || pathname.startsWith("/dashboard/"),
+      isLink: true,
     },
     {
       label: "History",
-      href: "/dashboard/history",
+      href: "#",
       icon: "history",
-      active: pathname === "/dashboard/history",
+      active: false,
+      isLink: false,
+      onClick: handleComingSoon,
     },
     {
       label: "Templates",
-      href: "/dashboard/templates",
+      href: "#",
       icon: "layers",
-      active: pathname === "/dashboard/templates",
+      active: false,
+      isLink: false,
+      onClick: handleComingSoon,
     },
     {
       label: "Settings",
-      href: "/dashboard/settings",
+      href: "#",
       icon: "settings",
-      active: pathname === "/dashboard/settings",
+      active: false,
+      isLink: false,
+      onClick: handleComingSoon,
     },
   ];
 
@@ -55,23 +67,42 @@ export function AppSidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 mt-4 px-2 space-y-2">
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`
-              flex items-center gap-3 px-4 py-3 rounded-2xl transition-all active:scale-[0.98]
-              ${
-                item.active
-                  ? "bg-surface-container text-primary font-semibold"
-                  : "text-on-surface-variant hover:bg-surface-container-low"
-              }
-            `}
-          >
-            <span className="material-symbols-outlined">{item.icon}</span>
-            <span className="hidden lg:block font-semibold">{item.label}</span>
-          </Link>
-        ))}
+        {navItems.map((item) => {
+          const baseClasses = `
+            flex items-center gap-3 px-4 py-3 rounded-2xl transition-all active:scale-[0.98]
+            ${
+              item.active
+                ? "bg-surface-container text-primary font-semibold"
+                : "text-on-surface-variant hover:bg-surface-container-low"
+            }
+          `;
+
+          const content = (
+            <>
+              <span className="material-symbols-outlined">{item.icon}</span>
+              <span className="hidden lg:block font-semibold">{item.label}</span>
+            </>
+          );
+
+          if (item.isLink) {
+            return (
+              <Link key={item.label} href={item.href} className={baseClasses}>
+                {content}
+              </Link>
+            );
+          }
+
+          return (
+            <button
+              key={item.label}
+              onClick={item.onClick}
+              className={`${baseClasses} w-full text-left cursor-pointer`}
+              type="button"
+            >
+              {content}
+            </button>
+          );
+        })}
       </nav>
 
       {/* Upgrade CTA */}

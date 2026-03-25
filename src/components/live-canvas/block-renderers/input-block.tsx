@@ -15,11 +15,11 @@ interface InputBlockRendererProps {
  * Displays a labeled text/number input field
  * Uses controlled component pattern for form value tracking
  */
-export function InputBlockRenderer({ 
-  block, 
+export function InputBlockRenderer({
+  block,
   path,
   value,
-  onValueChange 
+  onValueChange
 }: InputBlockRendererProps) {
   return (
     <div className="space-y-2">
@@ -27,7 +27,7 @@ export function InputBlockRenderer({
         {block.label}
       </label>
       <Input
-        value={value}
+        value={value || ''}
         onChange={(e) => onValueChange?.(path, e.target.value)}
         placeholder={block.placeholder}
         className="h-11"

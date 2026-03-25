@@ -9,6 +9,10 @@ import { uiSchemaSchema } from "./ui-schema";
 export const chatRequestSchema = z.object({
   projectId: z.string().optional(),
   message: z.string().min(1, "Message is required"),
+  messages: z.array(z.object({
+    role: z.enum(["user", "assistant"]),
+    content: z.string(),
+  })).optional(),
   formSubmission: z
     .object({
       values: z.record(z.string()),

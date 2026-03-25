@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import { LOADING_STATES } from "@/lib/copy/plain-language";
 
 export interface ChatMessage {
@@ -19,19 +20,46 @@ interface MessageListProps {
  * Handles user vs. assistant styling and layout
  */
 export function MessageList({ messages, isLoading = false }: MessageListProps) {
+  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [messages, isLoading]);
+
+  // Cycle through loading phrases every 2.5 seconds
+  useEffect(() => {
+    if (!isLoading) {
+      setCurrentPhraseIndex(0);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setCurrentPhraseIndex((prev) => (prev + 1) % LOADING_STATES.thinking.length);
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [isLoading]);
+
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
+    <div ref={containerRef} className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
       {messages.map((message) => (
         <MessageBubble key={message.id} message={message} />
       ))}
 
-      {/* Loading Indicator */}
+      {/* Loading Indicator - Shows one phrase at a time, cycling through */}
       {isLoading && (
         <div className="flex items-center gap-3 text-on-surface-variant italic text-sm">
           <span className="material-symbols-outlined animate-pulse">
             auto_awesome
           </span>
-          <span>{LOADING_STATES.thinking}</span>
+          <span>{LOADING_STATES.thinking[currentPhraseIndex]}</span>
         </div>
       )}
     </div>
