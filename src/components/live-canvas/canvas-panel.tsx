@@ -1,5 +1,6 @@
 "use client";
 
+import { useToast } from "@/components/ui/toast";
 import type { UIBlock } from "@/lib/schemas/ui-schema";
 import { DynamicRenderer } from "./dynamic-renderer";
 import { RecoveryState } from "./recovery-state";
@@ -19,14 +20,23 @@ export function CanvasPanel({
   status = "active",
   projectName,
 }: CanvasPanelProps) {
+  const { showInfo } = useToast();
   const isEmpty = !schema || schema.length === 0;
   const showRecovery = status === "needs_clarification" || status === "generation_failed";
+
+  const handleComingSoon = () => {
+    showInfo("Coming Soon: This feature is planned for the post-hackathon roadmap!");
+  };
 
   return (
     <section className="hidden md:flex flex-1 flex-col dot-grid relative overflow-hidden">
       <nav className="h-16 flex justify-between items-center px-8 bg-white/80 backdrop-blur-md z-10 border-none">
         <div className="flex items-center gap-4">
-          <button className="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors active:scale-95">
+          <button
+            onClick={handleComingSoon}
+            className="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors active:scale-95"
+            type="button"
+          >
             <span className="material-symbols-outlined">undo</span>
           </button>
           <div className="h-6 w-px bg-outline-variant/30" />
@@ -35,10 +45,18 @@ export function CanvasPanel({
           </span>
         </div>
         <div className="flex items-center gap-4">
-          <button className="text-primary-dim font-bold px-4 py-2 rounded-lg hover:bg-primary-container/20 transition-colors">
+          <button
+            onClick={handleComingSoon}
+            className="text-primary-dim font-bold px-4 py-2 rounded-lg hover:bg-primary-container/20 transition-colors"
+            type="button"
+          >
             Preview Mode
           </button>
-          <button className="bg-primary text-on-primary font-bold px-6 h-10 rounded-full flex items-center gap-2 shadow-lg shadow-primary/20 transition-all active:scale-95">
+          <button
+            onClick={handleComingSoon}
+            className="bg-primary text-on-primary font-bold px-6 h-10 rounded-full flex items-center gap-2 shadow-lg shadow-primary/20 transition-all active:scale-95"
+            type="button"
+          >
             <span>Publish App</span>
             <span className="material-symbols-outlined text-sm">rocket_launch</span>
           </button>
