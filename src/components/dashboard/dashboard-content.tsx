@@ -29,6 +29,7 @@ export function DashboardContent({ projectId: initialProjectId }: DashboardConte
   const addChatMessage = useMutation(api.projects.addChatMessage);
   const updateAppSchema = useMutation(api.projects.updateAppSchema);
   const updateProjectName = useMutation(api.projects.updateProjectName);
+  const updateProjectStatus = useMutation(api.projects.updateProjectStatus);
 
   const isExistingProject = Boolean(initialProjectId);
 
@@ -94,9 +95,11 @@ export function DashboardContent({ projectId: initialProjectId }: DashboardConte
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
 
+    // Track project ID across try/catch
+    let currentProjectId = projectId;
+
     try {
       // Create project if this is the first message
-      let currentProjectId = projectId;
       if (!currentProjectId) {
         // Use actual Clerk user ID
         const newProject = await createProject({
@@ -167,13 +170,35 @@ export function DashboardContent({ projectId: initialProjectId }: DashboardConte
 
       setMessages((prev) => [...prev, assistantMessage]);
 
-      // Save AI message and schema to Convex
+      // Save AI message and schema to Convex (in order)
       if (currentProjectId) {
+        // First, save the chat message
         await addChatMessage({
           projectId: currentProjectId,
           role: "assistant",
           content: data.reply,
         });
+
+        // Update project status based on AI response
+        if (data.status === "needs_clarification") {
+          await updateProjectStatus({
+            projectId: currentProjectId,
+            status: "needs_clarification",
+          });
+        } else if (data.status === "generation_failed") {
+          await updateProjectStatus({
+            projectId: currentProjectId,
+            status: "generation_failed",
+          });
+        } else if (data.status === "stable") {
+          // Only update to active if we have a valid schema
+          if (data.ui_schema && data.ui_schema.length > 0) {
+            await updateProjectStatus({
+              projectId: currentProjectId,
+              status: "active",
+            });
+          }
+        }
 
         // Update canvas with new schema if provided
         if (data.ui_schema && data.ui_schema.length > 0) {
@@ -204,6 +229,14 @@ export function DashboardContent({ projectId: initialProjectId }: DashboardConte
       };
 
       setMessages((prev) => [...prev, errorMessage]);
+
+      // Update project status to needs_clarification on error
+      if (currentProjectId) {
+        await updateProjectStatus({
+          projectId: currentProjectId,
+          status: "needs_clarification",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
