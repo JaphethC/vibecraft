@@ -1,9 +1,11 @@
 "use client";
 
 import { EMPTY_STATES } from "@/lib/copy/plain-language";
+import type { UIBlock } from "@/lib/schemas/ui-schema";
+import { DynamicRenderer } from "./dynamic-renderer";
 
 interface CanvasPanelProps {
-  isEmpty?: boolean;
+  schema?: UIBlock[] | null;
   isLoading?: boolean;
 }
 
@@ -12,9 +14,11 @@ interface CanvasPanelProps {
  * Displays the dynamic renderer or empty state
  */
 export function CanvasPanel({
-  isEmpty = true,
+  schema = null,
   isLoading = false,
 }: CanvasPanelProps) {
+  const isEmpty = !schema || schema.length === 0;
+
   return (
     <section className="hidden md:flex flex-1 flex-col dot-grid relative overflow-hidden">
       {/* Top Bar */}
@@ -40,7 +44,7 @@ export function CanvasPanel({
       </nav>
 
       {/* Canvas Content */}
-      <div className="flex-1 flex items-center justify-center p-12">
+      <div className="flex-1 flex items-center justify-center p-12 overflow-y-auto custom-scrollbar">
         {isEmpty ? (
           /* Empty State */
           <div className="text-center">
@@ -57,13 +61,8 @@ export function CanvasPanel({
             </p>
           </div>
         ) : (
-          /* Dynamic Renderer will go here */
-          <div className="w-full max-w-2xl">
-            {/* Placeholder for future dynamic renderer */}
-            <div className="text-center text-on-surface-variant">
-              <p>Tool rendering coming soon...</p>
-            </div>
-          </div>
+          /* Dynamic Renderer */
+          <DynamicRenderer schema={schema} />
         )}
       </div>
 
