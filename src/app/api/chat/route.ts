@@ -18,16 +18,21 @@ export async function POST(request: NextRequest) {
     const { message, formSubmission } = parsedRequest;
 
     // Build conversation history for the AI
+    const systemPrompt = getSystemPrompt();
+    
+    // Add form submission context to the system prompt if present
+    const enhancedSystemPrompt = formSubmission
+      ? `${systemPrompt}\n\nIMPORTANT: The user has submitted a form with the following values: ${JSON.stringify(formSubmission.values)}. Process these values and provide a result. Update the UI schema to show the calculation result or next step.`
+      : systemPrompt;
+
     const messages = [
       {
         role: "system" as const,
-        content: getSystemPrompt(),
+        content: enhancedSystemPrompt,
       },
       {
         role: "user" as const,
-        content: formSubmission
-          ? `${message}\n\nForm data submitted: ${JSON.stringify(formSubmission.values)}`
-          : message,
+        content: message,
       },
     ];
 

@@ -56,13 +56,13 @@
 
 ### Implementation for User Story 1
 
-- [ ] T018 [P] [US1] Create the live Coffee Chat conversation components in `src/components/coffee-chat/chat-panel.tsx`, `src/components/coffee-chat/message-list.tsx`, and `src/components/coffee-chat/message-input.tsx`
-- [ ] T019 [P] [US1] Create the Live Canvas dynamic renderer and block renderers in `src/components/live-canvas/dynamic-renderer.tsx`, `src/components/live-canvas/block-renderers/text-block.tsx`, `src/components/live-canvas/block-renderers/input-block.tsx`, `src/components/live-canvas/block-renderers/button-block.tsx`, `src/components/live-canvas/block-renderers/card-block.tsx`, and `src/components/live-canvas/block-renderers/dropdown-block.tsx`
-- [ ] T020 [US1] Implement the `/api/chat` route for first-message validation, standard blocking OpenRouter calls, and stable response shaping in `src/app/api/chat/route.ts`
-- [ ] T021 [US1] Add dashboard state management for creating projects, sending messages, showing loading states, and applying stable schema updates in `src/app/dashboard/page.tsx`
-- [ ] T022 [US1] Persist project creation, assistant replies, and stable `appSchema` updates through Convex in `convex/projects.ts` and `convex/chatMessages.ts`
-- [ ] T023 [US1] Wire the initial split-screen layout to the real chat and renderer components in `src/app/dashboard/page.tsx`
-- [ ] T024 [US1] Audit all first-run user-facing copy for zero jargon compliance in `src/components/coffee-chat/` and `src/components/live-canvas/`
+- [X] T018 [P] [US1] Create the live Coffee Chat conversation components in `src/components/coffee-chat/chat-panel.tsx`, `src/components/coffee-chat/message-list.tsx`, and `src/components/coffee-chat/message-input.tsx`
+- [X] T019 [P] [US1] Create the Live Canvas dynamic renderer and block renderers in `src/components/live-canvas/dynamic-renderer.tsx`, `src/components/live-canvas/block-renderers/text-block.tsx`, `src/components/live-canvas/block-renderers/input-block.tsx`, `src/components/live-canvas/block-renderers/button-block.tsx`, `src/components/live-canvas/block-renderers/card-block.tsx`, and `src/components/live-canvas/block-renderers/dropdown-block.tsx`
+- [X] T020 [US1] Implement the `/api/chat` route for first-message validation, standard blocking OpenRouter calls, and stable response shaping in `src/app/api/chat/route.ts`
+- [X] T021 [US1] Add dashboard state management for creating projects, sending messages, showing loading states, and applying stable schema updates in `src/app/dashboard/page.tsx`
+- [X] T022 [US1] Persist project creation, assistant replies, and stable `appSchema` updates through Convex in `convex/projects.ts` and `convex/chatMessages.ts`
+- [X] T023 [US1] Wire the initial split-screen layout to the real chat and renderer components in `src/app/dashboard/page.tsx`
+- [X] T024 [US1] Audit all first-run user-facing copy for zero jargon compliance in `src/components/coffee-chat/` and `src/components/live-canvas/`
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 

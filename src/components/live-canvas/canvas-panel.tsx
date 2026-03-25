@@ -7,27 +7,24 @@ import { DynamicRenderer } from "./dynamic-renderer";
 interface CanvasPanelProps {
   schema?: UIBlock[] | null;
   isLoading?: boolean;
+  onSubmit?: (formData: { values: Record<string, string>; buttonLabel: string }) => void;
 }
 
-/**
- * Live Canvas Panel - Right side of the split-screen dashboard
- * Displays the dynamic renderer or empty state
- */
 export function CanvasPanel({
   schema = null,
   isLoading = false,
+  onSubmit,
 }: CanvasPanelProps) {
   const isEmpty = !schema || schema.length === 0;
 
   return (
     <section className="hidden md:flex flex-1 flex-col dot-grid relative overflow-hidden">
-      {/* Top Bar */}
       <nav className="h-16 flex justify-between items-center px-8 bg-white/80 backdrop-blur-md z-10 border-none">
         <div className="flex items-center gap-4">
           <button className="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors active:scale-95">
             <span className="material-symbols-outlined">undo</span>
           </button>
-          <div className="h-6 w-px bg-outline-variant/30"></div>
+          <div className="h-6 w-px bg-outline-variant/30" />
           <span className="text-sm font-semibold text-on-surface-variant uppercase tracking-widest">
             Editing Preview
           </span>
@@ -43,11 +40,9 @@ export function CanvasPanel({
         </div>
       </nav>
 
-      {/* Canvas Content */}
-      <div className="flex-1 flex items-center justify-center p-12 overflow-y-auto custom-scrollbar">
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-8">
         {isEmpty ? (
-          /* Empty State */
-          <div className="text-center">
+          <div className="h-full min-h-[60vh] flex flex-col items-center justify-center text-center">
             <div className="w-20 h-20 rounded-full bg-surface-container-highest flex items-center justify-center mx-auto mb-6">
               <span className="material-symbols-outlined text-on-surface-variant text-4xl">
                 dashboard
@@ -61,12 +56,10 @@ export function CanvasPanel({
             </p>
           </div>
         ) : (
-          /* Dynamic Renderer */
-          <DynamicRenderer schema={schema} />
+          <DynamicRenderer schema={schema} onSubmit={onSubmit} isLoading={isLoading} />
         )}
       </div>
 
-      {/* Decorative Live Sync Badge */}
       <div className="absolute bottom-8 right-8 flex gap-3">
         <div className="bg-white/80 backdrop-blur-sm p-3 rounded-xl shadow-sm border border-outline-variant/10 flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white">

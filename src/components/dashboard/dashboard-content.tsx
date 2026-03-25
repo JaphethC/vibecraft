@@ -28,40 +28,45 @@ export function DashboardContent({ userEmail, projectId: initialProjectId }: Das
   const addChatMessage = useMutation(api.projects.addChatMessage);
   const updateAppSchema = useMutation(api.projects.updateAppSchema);
 
+  const isExistingProject = Boolean(initialProjectId);
+
   // Load existing project data from Convex
   const projectData = useQuery(
     api.projects.getProjectWithMessages,
     projectId ? { projectId } : "skip"
   );
 
-  // Initialize from Convex data when project loads
+  // Initialize from Convex only when reopening an existing project.
+  // For brand-new chats, avoid overwriting optimistic local first message.
   useEffect(() => {
-    if (projectData && !isInitialized) {
-      // Convert Convex chat history to ChatMessage format
-      const loadedMessages: ChatMessage[] = projectData.chatHistory.map((msg, index) => ({
-        id: `${msg.role}-${index}-${msg.timestamp}`,
-        role: msg.role as "user" | "assistant",
-        content: msg.content,
-        timestamp: msg.timestamp,
-      }));
-
-      setMessages(loadedMessages);
-      
-      // Load schema if it exists
-      if (projectData.appSchema) {
-        setSchema(projectData.appSchema as UIBlock[]);
-      }
-      
-      setIsInitialized(true);
+    if (!isExistingProject || !projectData || isInitialized) {
+      return;
     }
-  }, [projectData, isInitialized]);
 
-  const handleSendMessage = async (content: string) => {
+    const loadedMessages: ChatMessage[] = projectData.chatHistory.map((msg, index) => ({
+      id: `${msg.role}-${index}-${msg.timestamp}`,
+      role: msg.role as "user" | "assistant",
+      content: msg.content,
+      timestamp: msg.timestamp,
+    }));
+
+    setMessages(loadedMessages);
+
+    if (projectData.appSchema) {
+      setSchema(projectData.appSchema as UIBlock[]);
+    }
+
+    setIsInitialized(true);
+  }, [isExistingProject, projectData, isInitialized]);
+
+  const handleSendMessage = async (content: string, formData?: { values: Record<string, string>; buttonLabel: string }) => {
     // Add user message to chat immediately
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,
       role: "user",
-      content,
+      content: formData 
+        ? `I clicked "${formData.buttonLabel}" with: ${Object.entries(formData.values).map(([k, v]) => `${k}: ${v}`).join(", ")}`
+        : content,
       timestamp: Date.now(),
     };
 
@@ -92,19 +97,22 @@ export function DashboardContent({ userEmail, projectId: initialProjectId }: Das
         await addChatMessage({
           projectId: currentProjectId,
           role: "user",
-          content,
+          content: userMessage.content,
         });
       }
 
-      // Call the API
+      // Call the API - include form data if submitted
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: content,
+          message: formData 
+            ? `The user submitted the form with these values: ${JSON.stringify(formData.values)}. Please process this and update the UI with the result.`
+            : content,
           projectId: currentProjectId,
+          formSubmission: formData ? { values: formData.values } : undefined,
         }),
       });
 
@@ -158,6 +166,11 @@ export function DashboardContent({ userEmail, projectId: initialProjectId }: Das
     }
   };
 
+  const handleFormSubmit = (formData: { values: Record<string, string>; buttonLabel: string }) => {
+    // Form submission is handled by handleSendMessage with formData
+    handleSendMessage("", formData);
+  };
+
   return (
     <div className="flex-1 flex overflow-hidden">
       {/* Left Panel - Coffee Chat */}
@@ -168,7 +181,7 @@ export function DashboardContent({ userEmail, projectId: initialProjectId }: Das
       />
 
       {/* Right Panel - Live Canvas */}
-      <CanvasPanel schema={schema} isLoading={isLoading} />
+      <CanvasPanel schema={schema} isLoading={isLoading} onSubmit={handleFormSubmit} />
     </div>
   );
 }
