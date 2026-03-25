@@ -109,11 +109,11 @@
 
 **Purpose**: Improvements that affect multiple user stories and the hackathon demo quality
 
-- [ ] T036 [P] Implement generated form submission capture and chat-loop handoff in `src/lib/canvas/action-handlers.ts`, `src/components/live-canvas/dynamic-renderer.tsx`, and `src/app/api/chat/route.ts`
+- [X] T036 [P] Implement generated form submission capture and chat-loop handoff in `src/lib/canvas/action-handlers.ts`, `src/components/live-canvas/dynamic-renderer.tsx`, and `src/app/api/chat/route.ts`
 - [ ] T037 [P] Refine the dashboard visuals to match `_design_reference/code.html` and `_design_reference/screen.png` in `src/components/layout/sidebar.tsx`, `src/components/coffee-chat/chat-panel.tsx`, and `src/components/live-canvas/canvas-panel-shell.tsx`
-- [ ] T038 [P] Document the architecture, setup, judge demo flow, and multi-industry prompts in `README.md`
-- [ ] T039 [P] Document post-MVP ideas such as richer block types, revision history, and code export in `FUTURE_VISION.md`
-- [ ] T040 Run linting, build verification, and `npm run typecheck` using the commands documented in `package.json` and `README.md`
+- [X] T038 [P] Document the architecture, setup, judge demo flow, and multi-industry prompts in `README.md`
+- [X] T039 [P] Document post-MVP ideas such as richer block types, revision history, and code export in `FUTURE_VISION.md`
+- [X] T040 Run linting, build verification, and `npm run typecheck` using the commands documented in `package.json` and `README.md`
 
 ---
 

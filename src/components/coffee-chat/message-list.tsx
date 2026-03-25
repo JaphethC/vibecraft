@@ -22,21 +22,32 @@ interface MessageListProps {
 export function MessageList({ messages, isLoading = false }: MessageListProps) {
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const prevMessagesRef = useRef<ChatMessage[]>([]);
+  const prevLoadingRef = useRef<boolean>(false);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    container.scrollTo({
-      top: container.scrollHeight,
-      behavior: "smooth",
-    });
+    
+    // Only scroll if messages actually changed
+    const messagesChanged = JSON.stringify(messages) !== JSON.stringify(prevMessagesRef.current);
+    const loadingChanged = isLoading !== prevLoadingRef.current;
+    
+    if (messagesChanged || loadingChanged) {
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+    
+    prevMessagesRef.current = messages;
+    prevLoadingRef.current = isLoading;
   }, [messages, isLoading]);
 
   // Cycle through loading phrases every 2.5 seconds
   useEffect(() => {
     if (!isLoading) {
-      setCurrentPhraseIndex(0);
       return;
     }
 

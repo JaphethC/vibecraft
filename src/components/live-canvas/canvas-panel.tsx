@@ -1,6 +1,5 @@
 "use client";
 
-import { EMPTY_STATES, RECOVERY_STATES } from "@/lib/copy/plain-language";
 import type { UIBlock } from "@/lib/schemas/ui-schema";
 import { DynamicRenderer } from "./dynamic-renderer";
 import { RecoveryState } from "./recovery-state";

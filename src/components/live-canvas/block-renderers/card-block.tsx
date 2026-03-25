@@ -1,6 +1,6 @@
 "use client";
 
-import type { CardBlock, UIBlock } from "@/lib/schemas/ui-schema";
+import type { CardBlock } from "@/lib/schemas/ui-schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { BlockRenderer } from "./block-renderer";
 

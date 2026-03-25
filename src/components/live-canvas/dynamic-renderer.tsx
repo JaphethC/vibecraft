@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import type { UIBlock } from "@/lib/schemas/ui-schema";
 import { BlockRenderer } from "./block-renderers/block-renderer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,36 +33,31 @@ export function DynamicRenderer({
   // Track previous schema to detect meaningful changes
   const [previousSchema, setPreviousSchema] = useState<UIBlock[] | null>(null);
 
-  // Update form values when schema changes (preserve existing values, add new fields)
-  useEffect(() => {
-    if (!schema || schema.length === 0) {
-      return;
-    }
-
-    // Check if schema actually changed (not just a re-render)
+  // Preserve form values when schema changes
+  // This runs during render but only updates state when schema actually changed
+  if (schema && schema.length > 0 && previousSchema) {
     const schemaChanged = JSON.stringify(schema) !== JSON.stringify(previousSchema);
     
-    if (schemaChanged) {
-      // Preserve existing form values - don't clear them on schema updates
-      // Only clear if the schema is completely different (different number of blocks)
-      if (previousSchema && schema.length !== previousSchema.length) {
-        // Schema structure changed significantly - keep values that still apply
-        setFormValues(prev => {
-          // Keep values for fields that still exist in new schema
-          const preservedValues: Record<string, string> = {};
-          schema.forEach((block, index) => {
-            const path = `${index}`;
-            if (prev[path] !== undefined) {
-              preservedValues[path] = prev[path];
-            }
-          });
-          return preservedValues;
-        });
-      }
-      // Update previous schema reference
+    if (schemaChanged && schema.length !== previousSchema.length) {
+      // Schema structure changed - preserve values for fields that still exist
+      const preservedValues: Record<string, string> = {};
+      schema.forEach((block, index) => {
+        const path = `${index}`;
+        if (formValues[path] !== undefined) {
+          preservedValues[path] = formValues[path];
+        }
+      });
+      // Update state with preserved values and update previous schema
+      setFormValues(preservedValues);
+      setPreviousSchema(schema);
+    } else if (schemaChanged) {
+      // Schema content changed but not length - just update reference
       setPreviousSchema(schema);
     }
-  }, [schema, previousSchema]);
+  } else if (schema && schema.length > 0 && !previousSchema) {
+    // First render with schema - just store it
+    setPreviousSchema(schema);
+  }
 
   // Update a form value
   const handleValueChange = useCallback((path: string, value: string) => {
@@ -78,7 +73,7 @@ export function DynamicRenderer({
   }, [formValues, onSubmit]);
 
   // Handle button click (for individual buttons within the form)
-  const handleButtonClick = useCallback((buttonLabel: string, buttonPath: string) => {
+  const handleButtonClick = useCallback((buttonLabel: string) => {
     if (isLoading || !onSubmit) return;
 
     onSubmit({ values: formValues, buttonLabel });
@@ -92,9 +87,10 @@ export function DynamicRenderer({
 
     return schema.map((block, index) => {
       // Use stable key based on block type and content, not just index
-      // Cast to any to access optional properties safely
-      const blockAny = block as any;
-      const stableKey = `${block.type}-${blockAny.label || blockAny.content || ''}-${index}`;
+      // Access optional properties safely using type guards
+      const blockContent = 'content' in block ? block.content : undefined;
+      const blockLabel = 'label' in block ? block.label : undefined;
+      const stableKey = `${block.type}-${blockLabel || blockContent || ''}-${index}`;
       
       return (
         <BlockRenderer

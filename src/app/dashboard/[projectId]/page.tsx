@@ -17,7 +17,6 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
 
   const resolvedParams = await params;
   const projectId = resolvedParams.projectId;
-  const userEmail = user.emailAddresses[0]?.emailAddress || "User";
 
   return (
     <div className="h-screen flex flex-col bg-surface">

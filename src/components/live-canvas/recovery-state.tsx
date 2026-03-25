@@ -1,7 +1,6 @@
 "use client";
 
 import { EMPTY_STATES, RECOVERY_STATES } from "@/lib/copy/plain-language";
-import type { Id } from "../../../convex/_generated/dataModel";
 
 interface RecoveryStateProps {
   status?: "empty" | "needs_clarification" | "generation_failed";
@@ -65,7 +64,7 @@ export function RecoveryState({
         </p>
         {projectName && (
           <p className="body text-on-surface-variant mb-6">
-            Your last stable version of <strong className="text-on-surface font-semibold">"{projectName}"</strong> is still available below.
+            Your last stable version of <strong className="text-on-surface font-semibold">&quot;{projectName}&quot;</strong> is still available below.
           </p>
         )}
         <div className="flex gap-3">

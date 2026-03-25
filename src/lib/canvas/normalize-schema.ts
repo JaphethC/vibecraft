@@ -1,4 +1,4 @@
-import { SUPPORTED_BLOCK_TYPES, type UIBlock, type BlockType } from "@/lib/schemas/ui-schema";
+import { SUPPORTED_BLOCK_TYPES, type UIBlock } from "@/lib/schemas/ui-schema";
 
 /**
  * Default values for each block type

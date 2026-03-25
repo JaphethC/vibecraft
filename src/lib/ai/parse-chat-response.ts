@@ -1,5 +1,4 @@
 import {
-  safeParseOpenRouterResponse,
   validateUISchema,
 } from "@/lib/schemas/chat-route";
 import {
@@ -8,7 +7,7 @@ import {
   createClarificationResponse,
   createGenerationFailedResponse,
 } from "./openrouter";
-import type { ChatResponse, OpenRouterResponse } from "@/lib/schemas/chat-route";
+import type { ChatResponse } from "@/lib/schemas/chat-route";
 
 /**
  * Process raw OpenRouter response with comprehensive error handling

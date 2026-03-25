@@ -51,9 +51,9 @@ export function collectFormValues(
 export async function handleButtonClick(params: {
   buttonLabel: string;
   formValues: FormValues;
-  schema: UIBlock[];
+  _schema?: UIBlock[];
 }): Promise<ActionResult> {
-  const { buttonLabel, formValues, schema } = params;
+  const { buttonLabel, formValues } = params;
 
   try {
     // For MVP, we just collect the values and send them back
