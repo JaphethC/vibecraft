@@ -13,6 +13,17 @@ export const chatRequestSchema = z.object({
     role: z.enum(["user", "assistant"]),
     content: z.string(),
   })).optional(),
+  projectContext: z.object({
+    projectName: z.string().optional(),
+    currentSchema: z.array(z.object({
+      type: z.string(),
+      content: z.string().optional(),
+      label: z.string().optional(),
+      placeholder: z.string().optional(),
+      options: z.array(z.string()).optional(),
+      children: z.array(z.any()).optional(),
+    })).optional(),
+  }).optional(),
   formSubmission: z
     .object({
       values: z.record(z.string()),
@@ -33,6 +44,7 @@ export const chatResponseSchema = z.object({
   status: z
     .enum(["stable", "needs_clarification", "generation_failed"])
     .default("stable"),
+  projectName: z.string().optional(),
 });
 
 export type ChatResponse = z.infer<typeof chatResponseSchema>;
@@ -46,6 +58,7 @@ export type ChatResponse = z.infer<typeof chatResponseSchema>;
 export const openRouterResponseSchema = z.object({
   reply: z.string().min(1, "Assistant reply is required"),
   ui_schema: uiSchemaSchema,
+  projectName: z.string().optional(),
 });
 
 export type OpenRouterResponse = z.infer<typeof openRouterResponseSchema>;

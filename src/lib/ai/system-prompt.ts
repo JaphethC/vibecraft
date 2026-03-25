@@ -119,3 +119,44 @@ REMINDER:
 export function getSystemPrompt(): string {
   return SYSTEM_PROMPT;
 }
+
+/**
+ * Get the system prompt enhanced with project context for refinement requests
+ */
+export function getSystemPromptWithProjectContext(options: {
+  projectName?: string;
+  currentSchema?: string;
+  conversationLength?: number;
+}): string {
+  const basePrompt = getSystemPrompt();
+  
+  const contextParts: string[] = [];
+  
+  if (options.projectName) {
+    contextParts.push(`Current project name: "${options.projectName}"`);
+  }
+  
+  if (options.currentSchema) {
+    contextParts.push(`Current tool structure: ${options.currentSchema}`);
+  }
+  
+  if (options.conversationLength && options.conversationLength > 5) {
+    contextParts.push("This is an ongoing conversation - the user is refining an existing tool, not creating a new one.");
+  }
+  
+  if (contextParts.length === 0) {
+    return basePrompt;
+  }
+  
+  return `${basePrompt}
+
+PROJECT CONTEXT FOR REFINEMENT:
+You are now helping a user refine an existing tool they've already built. Use this context to understand their requests:
+${contextParts.join("\n")}
+
+When refining:
+- Keep existing fields unless the user explicitly asks to remove them
+- Add new fields or modify labels based on user requests
+- If the user's request suggests a better project name, include "projectName" in your response
+- Maintain consistency with the existing tool's purpose`;
+}

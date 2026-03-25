@@ -28,6 +28,7 @@ export function DashboardContent({ projectId: initialProjectId }: DashboardConte
   const createProject = useMutation(api.projects.createProject);
   const addChatMessage = useMutation(api.projects.addChatMessage);
   const updateAppSchema = useMutation(api.projects.updateAppSchema);
+  const updateProjectName = useMutation(api.projects.updateProjectName);
 
   const isExistingProject = Boolean(initialProjectId);
 
@@ -121,7 +122,7 @@ export function DashboardContent({ projectId: initialProjectId }: DashboardConte
         });
       }
 
-      // Call the API - include full conversation history for context
+      // Call the API - include full conversation history for context and project context for refinement
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
@@ -139,6 +140,13 @@ export function DashboardContent({ projectId: initialProjectId }: DashboardConte
               content: msg.content,
             })),
           projectId: currentProjectId,
+          // Include project context for refinement requests
+          projectContext: currentProjectId && projectData
+            ? {
+                projectName: projectData.projectName,
+                currentSchema: projectData.appSchema || undefined,
+              }
+            : undefined,
           formSubmission: formData ? { values: formData.values } : undefined,
         }),
       });
@@ -173,6 +181,14 @@ export function DashboardContent({ projectId: initialProjectId }: DashboardConte
           await updateAppSchema({
             projectId: currentProjectId,
             appSchema: data.ui_schema,
+          });
+        }
+
+        // Update project name if AI suggests a better one
+        if (data.projectName && data.projectName !== projectData?.projectName) {
+          await updateProjectName({
+            projectId: currentProjectId,
+            projectName: data.projectName,
           });
         }
       }
