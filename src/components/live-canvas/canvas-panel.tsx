@@ -1,21 +1,27 @@
 "use client";
 
-import { EMPTY_STATES } from "@/lib/copy/plain-language";
+import { EMPTY_STATES, RECOVERY_STATES } from "@/lib/copy/plain-language";
 import type { UIBlock } from "@/lib/schemas/ui-schema";
 import { DynamicRenderer } from "./dynamic-renderer";
+import { RecoveryState } from "./recovery-state";
 
 interface CanvasPanelProps {
   schema?: UIBlock[] | null;
   isLoading?: boolean;
   onSubmit?: (formData: { values: Record<string, string>; buttonLabel: string }) => void;
+  status?: "active" | "needs_clarification" | "generation_failed";
+  projectName?: string;
 }
 
 export function CanvasPanel({
   schema = null,
   isLoading = false,
   onSubmit,
+  status = "active",
+  projectName,
 }: CanvasPanelProps) {
   const isEmpty = !schema || schema.length === 0;
+  const showRecovery = status === "needs_clarification" || status === "generation_failed";
 
   return (
     <section className="hidden md:flex flex-1 flex-col dot-grid relative overflow-hidden">
@@ -41,20 +47,15 @@ export function CanvasPanel({
       </nav>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-8 relative">
-        {isEmpty ? (
-          <div className="h-full min-h-[60vh] flex flex-col items-center justify-center text-center">
-            <div className="w-20 h-20 rounded-full bg-surface-container-highest flex items-center justify-center mx-auto mb-6">
-              <span className="material-symbols-outlined text-on-surface-variant text-4xl">
-                dashboard
-              </span>
-            </div>
-            <h2 className="headline-lg text-on-surface mb-3">
-              {EMPTY_STATES.canvas.title}
-            </h2>
-            <p className="body-lg text-on-surface-variant max-w-md">
-              {EMPTY_STATES.canvas.description}
-            </p>
-          </div>
+        {showRecovery ? (
+          <RecoveryState
+            status={status}
+            projectName={projectName}
+            onRetry={() => console.log("Retry clicked")}
+            onClarify={() => console.log("Clarify clicked")}
+          />
+        ) : isEmpty ? (
+          <RecoveryState status="empty" />
         ) : (
           <div className="relative">
             <DynamicRenderer schema={schema} onSubmit={onSubmit} isLoading={isLoading} />

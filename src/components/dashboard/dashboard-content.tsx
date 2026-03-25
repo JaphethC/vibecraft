@@ -257,7 +257,13 @@ export function DashboardContent({ projectId: initialProjectId }: DashboardConte
       />
 
       {/* Right Panel - Live Canvas */}
-      <CanvasPanel schema={schema} isLoading={isLoading} onSubmit={handleFormSubmit} />
+      <CanvasPanel
+        schema={schema}
+        isLoading={isLoading}
+        onSubmit={handleFormSubmit}
+        status={projectData?.status || "active"}
+        projectName={projectData?.projectName}
+      />
     </div>
   );
 }

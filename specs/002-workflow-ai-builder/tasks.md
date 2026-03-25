@@ -95,7 +95,7 @@
 
 ### Implementation for User Story 3
 
-- [ ] T031 [P] [US3] Create recovery-state UI for empty, clarification, and generation-failed canvas states in `src/components/live-canvas/recovery-state.tsx`
+- [X] T031 [P] [US3] Create recovery-state UI for empty, clarification, and generation-failed canvas states in `src/components/live-canvas/recovery-state.tsx`
 - [ ] T032 [P] [US3] Add clarification and fallback copy patterns in `src/lib/ai/system-prompt.ts` and `src/lib/copy/plain-language.ts`
 - [ ] T033 [US3] Harden `/api/chat` to reject invalid schemas, preserve the last stable schema, emit recovery statuses, and show a friendly connection-loss toast in `src/app/api/chat/route.ts` and `src/components/ui/error-toast.tsx`
 - [ ] T034 [US3] Persist project status transitions for `active`, `needs_clarification`, and `generation_failed` in `convex/projects.ts`

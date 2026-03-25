@@ -128,6 +128,30 @@ export const ERROR_STATES = {
 } as const;
 
 // =============================================================================
+// Recovery States
+// =============================================================================
+
+export const RECOVERY_STATES = {
+  // AI needs more information to proceed
+  clarification: {
+    title: "I need a bit more information",
+    message: "Could you give me an example of how this would work in your daily routine? The more details you share, the better I can help!",
+  },
+
+  // Generation failed - preserve last stable state
+  generationFailed: {
+    title: "I had trouble putting that together",
+    message: "Let's try a different approach - could you describe what you need in simpler terms? For example, what would you write down on paper if you were doing this by hand?",
+  },
+
+  // Empty state - no tool yet
+  empty: {
+    title: "Your tool will appear here",
+    message: "Describe a repetitive task or workflow in the chat, and I'll build a tool to help you.",
+  },
+} as const;
+
+// =============================================================================
 // Success States
 // =============================================================================
 
