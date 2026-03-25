@@ -1,6 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import type { Id } from "../../../convex/_generated/dataModel";
 import { ChatPanel } from "@/components/coffee-chat/chat-panel";
 import { CanvasPanel } from "@/components/live-canvas/canvas-panel";
 import type { ChatMessage } from "@/components/coffee-chat/message-list";
@@ -8,15 +11,53 @@ import type { UIBlock } from "@/lib/schemas/ui-schema";
 
 interface DashboardContentProps {
   userEmail: string;
+  projectId?: string;
 }
 
-export function DashboardContent({ userEmail }: DashboardContentProps) {
+export function DashboardContent({ userEmail, projectId: initialProjectId }: DashboardContentProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [schema, setSchema] = useState<UIBlock[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [projectId, setProjectId] = useState<Id<"projects"> | undefined>(
+    initialProjectId as Id<"projects"> | undefined
+  );
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Convex mutations
+  const createProject = useMutation(api.projects.createProject);
+  const addChatMessage = useMutation(api.projects.addChatMessage);
+  const updateAppSchema = useMutation(api.projects.updateAppSchema);
+
+  // Load existing project data from Convex
+  const projectData = useQuery(
+    api.projects.getProjectWithMessages,
+    projectId ? { projectId } : "skip"
+  );
+
+  // Initialize from Convex data when project loads
+  useEffect(() => {
+    if (projectData && !isInitialized) {
+      // Convert Convex chat history to ChatMessage format
+      const loadedMessages: ChatMessage[] = projectData.chatHistory.map((msg, index) => ({
+        id: `${msg.role}-${index}-${msg.timestamp}`,
+        role: msg.role as "user" | "assistant",
+        content: msg.content,
+        timestamp: msg.timestamp,
+      }));
+
+      setMessages(loadedMessages);
+      
+      // Load schema if it exists
+      if (projectData.appSchema) {
+        setSchema(projectData.appSchema as UIBlock[]);
+      }
+      
+      setIsInitialized(true);
+    }
+  }, [projectData, isInitialized]);
 
   const handleSendMessage = async (content: string) => {
-    // Add user message to chat
+    // Add user message to chat immediately
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,
       role: "user",
@@ -28,6 +69,33 @@ export function DashboardContent({ userEmail }: DashboardContentProps) {
     setIsLoading(true);
 
     try {
+      // Create project if this is the first message
+      let currentProjectId = projectId;
+      if (!currentProjectId) {
+        // For MVP, using userEmail as userId placeholder
+        const newProject = await createProject({
+          userId: userEmail,
+          projectName: content.slice(0, 50) + (content.length > 50 ? "..." : ""),
+        });
+        
+        if (newProject) {
+          currentProjectId = newProject._id;
+          setProjectId(currentProjectId);
+          
+          // Update URL without reload
+          window.history.pushState({}, "", `/dashboard/${currentProjectId}`);
+        }
+      }
+
+      // Save user message to Convex
+      if (currentProjectId) {
+        await addChatMessage({
+          projectId: currentProjectId,
+          role: "user",
+          content,
+        });
+      }
+
       // Call the API
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -36,6 +104,7 @@ export function DashboardContent({ userEmail }: DashboardContentProps) {
         },
         body: JSON.stringify({
           message: content,
+          projectId: currentProjectId,
         }),
       });
 
@@ -55,9 +124,22 @@ export function DashboardContent({ userEmail }: DashboardContentProps) {
 
       setMessages((prev) => [...prev, assistantMessage]);
 
-      // Update canvas with new schema if provided
-      if (data.ui_schema && data.ui_schema.length > 0) {
-        setSchema(data.ui_schema);
+      // Save AI message and schema to Convex
+      if (currentProjectId) {
+        await addChatMessage({
+          projectId: currentProjectId,
+          role: "assistant",
+          content: data.reply,
+        });
+
+        // Update canvas with new schema if provided
+        if (data.ui_schema && data.ui_schema.length > 0) {
+          setSchema(data.ui_schema);
+          await updateAppSchema({
+            projectId: currentProjectId,
+            appSchema: data.ui_schema,
+          });
+        }
       }
     } catch (error) {
       console.error("Failed to send message:", error);

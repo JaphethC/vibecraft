@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import type { UIBlock } from "@/lib/schemas/ui-schema";
 import { BlockRenderer } from "./block-renderers/block-renderer";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface DynamicRendererProps {
   schema: UIBlock[];
@@ -10,7 +11,7 @@ interface DynamicRendererProps {
 
 /**
  * Dynamic Renderer - Maps UI schema blocks to rendered React components
- * Uses memoization to prevent unnecessary re-renders
+ * Wraps everything in a polished card container for a tablet-like appearance
  */
 export function DynamicRenderer({ schema }: DynamicRendererProps) {
   const renderedBlocks = useMemo(() => {
@@ -24,8 +25,10 @@ export function DynamicRenderer({ schema }: DynamicRendererProps) {
   }, [schema]);
 
   return (
-    <div className="w-full max-w-2xl space-y-6 p-8">
-      {renderedBlocks}
-    </div>
+    <Card className="w-full max-w-md mx-auto bg-white shadow-lg border-0 rounded-xl">
+      <CardContent className="p-6 space-y-6">
+        {renderedBlocks}
+      </CardContent>
+    </Card>
   );
 }

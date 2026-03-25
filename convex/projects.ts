@@ -39,12 +39,26 @@ export const getUserProjects = query({
 });
 
 /**
- * Get a single project by ID
+ * Get a single project by ID with full data
  */
 export const getProjectById = query({
   args: { projectId: v.id("projects") },
   handler: async (ctx, args) => {
     return await ctx.db.get(args.projectId);
+  },
+});
+
+/**
+ * Get a project with its full chat history
+ */
+export const getProjectWithMessages = query({
+  args: { projectId: v.id("projects") },
+  handler: async (ctx, args) => {
+    const project = await ctx.db.get(args.projectId);
+    if (!project) {
+      return null;
+    }
+    return project;
   },
 });
 
