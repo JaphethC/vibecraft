@@ -40,7 +40,7 @@ export function CanvasPanel({
         </div>
       </nav>
 
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-8">
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-8 relative">
         {isEmpty ? (
           <div className="h-full min-h-[60vh] flex flex-col items-center justify-center text-center">
             <div className="w-20 h-20 rounded-full bg-surface-container-highest flex items-center justify-center mx-auto mb-6">
@@ -56,7 +56,21 @@ export function CanvasPanel({
             </p>
           </div>
         ) : (
-          <DynamicRenderer schema={schema} onSubmit={onSubmit} isLoading={isLoading} />
+          <div className="relative">
+            <DynamicRenderer schema={schema} onSubmit={onSubmit} isLoading={isLoading} />
+            
+            {/* Loading overlay during schema updates */}
+            {isLoading && (
+              <div className="absolute inset-0 bg-white/50 backdrop-blur-[1px] rounded-xl flex items-center justify-center pointer-events-none">
+                <div className="bg-white shadow-lg rounded-lg px-6 py-4 flex items-center gap-3">
+                  <span className="material-symbols-outlined animate-spin text-primary">
+                    progress_activity
+                  </span>
+                  <span className="text-sm font-medium text-on-surface">Updating...</span>
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </div>
 
